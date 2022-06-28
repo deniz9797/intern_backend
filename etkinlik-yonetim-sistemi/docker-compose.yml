@@ -1,0 +1,26 @@
+---
+version: '2'
+services:
+  postgres:
+    image: postgres:13.1
+    ports:
+      - "5433:5432"
+    environment:
+      - PGDATA=postgres
+      - POSTGRES_HOST_AUTH_METHOD=trust
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    volumes:
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+  pgadmin:
+    container_name: pgadmin_container
+    image: dpage/pgadmin4:4.18
+    environment:
+      PGADMIN_CONFIG_SERVER_MODE: 'False'
+      PGADMIN_DEFAULT_EMAIL: pgadmin
+      PGADMIN_DEFAULT_PASSWORD: pgadmin
+    ports:
+      - "8082:80"
+    restart: unless-stopped
+    depends_on:
+      - "postgres" 
